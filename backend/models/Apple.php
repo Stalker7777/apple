@@ -55,9 +55,8 @@ class Apple extends ActiveRecord
     {
         return [
             [['color', 'size', 'status'], 'required'],
-            [['color', 'status'], 'integer'],
+            [['color', 'status', 'fall_date', 'created_at', 'updated_at'], 'integer'],
             [['size'], 'number'],
-            [['fall_date', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
