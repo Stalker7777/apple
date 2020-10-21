@@ -60,10 +60,9 @@ function create_apples(data)
     var apples_on_tree = '';
     var apples_on_ground = '';
 
-    console.log(data);
+    //console.log(data);
 
     for(var i in data) {
-        //console.log(data[i].id);
         if(data[i]['status'] == 1) {
             apples_on_tree += create_apple(data[i]);
         }
@@ -82,8 +81,8 @@ function create_apple(item)
         + '<input type="hidden" value="' + item.id + '">'
         + '<input id="apple_status_' + item.id + '" type="hidden" value="' + item.status + '">'
         + '<input type="hidden" value="' + item.color + '">'
-        + '<input type="hidden" value="' + item.size + '">'
-        + '<img src="' + item.image + '" width="64px" height="64px" alt="apple">'
+        + '<input id="apple_size_' + item.id + '" type="hidden" value="' + item.size + '">'
+        + '<img id="apple_image_' + item.id + '" src="' + item.image + '" width="64px" height="64px" alt="apple">'
         + '<button class="btn btn-default" onclick="apple_fall(' + item.id + ')">Упасть</button>'
         + '<button class="btn btn-primary" onclick="apple_eat(' + item.id + ')">Съесть</button>'
         + '</div>';
@@ -136,15 +135,107 @@ function apple_fall_update(data)
 
 function apple_eat(id)
 {
+    var apple_status = $('#apple_status_' + id).val();
 
+    if(apple_status != 2) {
+
+        if(apple_status == 1) {
+            alert('Яблоко съесть нельзя! Яблоко на девере!');
+            return;
+        }
+        if(apple_status == 3) {
+            alert('Яблоко съесть нельзя! Яблоко гнилое!');
+            return;
+        }
+
+        alert('Яблоко съесть нельзя!');
+        return;
+    }
+
+    $('#apple_eat_id').val(id);
+    $('#modal_eat_apple_percent').modal('show');
 }
 
-function apple_eat_percent(id, percent)
+function select_percent(percent)
+{
+    $('#apple_eat_percent').val(percent);
+}
+
+function apple_eat_percent()
+{
+    var id = $('#apple_eat_id').val();
+    var percent = $('#apple_eat_percent').val();
+
+    if(percent.length == 0) {
+        $('#modal_text_error').html('Выберите или введите значение в диапазоне от 0 до 100 включительно!');
+        return;
+    }
+
+    if(percent <= 0 || percent > 100) {
+        alert('dsfsdf');
+        $('#modal_text_error').html('Введите значение в диапазоне от 0 до 100 включительно!');
+        return;
+    }
+
+    $('#modal_eat_apple_percent').modal('hide');
+
+    $.ajax({
+        url: 'admin/ajax/apple-eat',
+        method: 'post',
+        data: { 'id': id, 'percent': percent },
+        'error': function() {
+            alert('Ошибка выполнения запроса к серверу!');
+        },
+        'success': function(data) {
+//            console.log(data);
+            var result = JSON.parse(data);
+
+            if(result.is_error) {
+
+                if(result.is_remove) {
+                    alert('Яблоко было съедено полностью!');
+                    apple_remove(result.apple);
+                }
+                else {
+                    alert('При попытки съесть яблоко возникла ошибка!');
+                    console.log(result.message);
+                }
+
+            }
+            else {
+                apple_eat_update(result.apple);
+            }
+        }
+    });
+}
+
+function apple_eat_update(data)
+{
+    var id = data['id'];
+    var size = data['size'];
+    var image = data['image'];
+
+    $('#apple_size_' + id).val(size);
+    $('#apple_image_' + id).attr('src', image);
+}
+
+function apple_remove(data) {
+    var id = data['id'];
+
+    $('#block_apples_on_ground').children('#block_apple_' + id).remove();
+}
+
+function apples_rotten()
 {
 
 }
 
-function apple_eat_update(id, image)
+function apples_rotten_update(data)
+{
+
+}
+
+function apple_rotten_update()
 {
 
 }
