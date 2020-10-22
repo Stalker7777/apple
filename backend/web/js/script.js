@@ -1,5 +1,6 @@
 $(document).ready(function(){
     get_apples();
+    apples_rotten();
 });
 
 function get_apples()
@@ -227,15 +228,44 @@ function apple_remove(data) {
 
 function apples_rotten()
 {
+    $.ajax({
+        url: 'admin/ajax/apples-rotten',
+        method: 'get',
+        'error': function() {
+            alert('Ошибка выполнения запроса к серверу!');
+        },
+        'success': function(data) {
+            var result = JSON.parse(data);
 
+            if(result.is_error) {
+                console.log(result.message);
+            }
+            else {
+                apples_rotten_update(result.apples);
+            }
+            setTimeoutRotten();
+        }
+    });
+}
+
+function setTimeoutRotten()
+{
+    setTimeout(apples_rotten, 60000);
 }
 
 function apples_rotten_update(data)
 {
-
+    for(var i in data) {
+        apple_rotten_update(data[i]);
+    }
 }
 
-function apple_rotten_update()
+function apple_rotten_update(item)
 {
+    var id = item['id'];
+    var status = item['status'];
+    var image = item['image'];
 
+    $('#apple_status_' + id).val(status);
+    $('#apple_image_' + id).attr('src', image);
 }

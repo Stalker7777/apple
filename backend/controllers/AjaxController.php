@@ -136,4 +136,37 @@ class AjaxController extends Controller
     
         return json_encode(['is_error' => true, 'message' => 'Ошибка при попытке съесть яблоко!']);
     }
+    
+    public function actionApplesRotten()
+    {
+        $apples = Apple::find()
+            ->where('(:current_time - fall_date) / 3600 > 5')
+            ->andWhere(['status' => Apple::STATUS_ON_GROUND])
+            ->params([':current_time' => time()])->all();
+
+        if(count($apples) == 0) {
+            return json_encode(['is_error' => true, 'message' => 'Гнилых яблок нет!']);
+        }
+        
+        $ids_rotten = [];
+        
+        foreach($apples as $apple) {
+            $apple->status = Apple::STATUS_ROTTEN;
+            if($apple->save()) {
+                $ids_rotten[] = $apple->id;
+            }
+        }
+        
+        if(count($ids_rotten) > 0) {
+            $apples = Apple::find()->where(['id' => $ids_rotten])->asArray()->all();
+    
+            foreach ($apples as &$apple) {
+                $apple['image'] = Apples::getPathImage($apple);
+            }
+            
+            return json_encode(['is_error' => false, 'apples' => $apples]);
+        }
+        
+        return json_encode(['is_error' => true, 'message' => 'Ошибка при проверке гнилых яблок!']);
+    }
 }
