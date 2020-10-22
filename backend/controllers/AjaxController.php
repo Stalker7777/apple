@@ -11,6 +11,9 @@ use app\models\Apple;
  */
 class AjaxController extends Controller
 {
+    /**
+     * @return string
+     */
     public function actionGetApples()
     {
         $apple = Apple::find()->asArray()->all();
@@ -26,6 +29,9 @@ class AjaxController extends Controller
         return json_encode(['is_error' => true, 'message' => 'При получении яблок возникла ошибка!']);
     }
     
+    /**
+     * @return string
+     */
     public function actionGenerateApples()
     {
         $apples = new Apples();
@@ -33,6 +39,9 @@ class AjaxController extends Controller
         return json_encode($apples->generate());
     }
     
+    /**
+     * @return array|string
+     */
     public function actionAppleFall()
     {
         if (Yii::$app->request->isAjax && Yii::$app->request->isPost) {
@@ -77,6 +86,9 @@ class AjaxController extends Controller
         return json_encode(['is_error' => true, 'message' => 'Ошибка обновления статуса яблока!']);
     }
     
+    /**
+     * @return string
+     */
     public function actionAppleEat()
     {
         if (Yii::$app->request->isAjax && Yii::$app->request->isPost) {
@@ -137,6 +149,9 @@ class AjaxController extends Controller
         return json_encode(['is_error' => true, 'message' => 'Ошибка при попытке съесть яблоко!']);
     }
     
+    /**
+     * @return string
+     */
     public function actionApplesRotten()
     {
         $apples = Apple::find()

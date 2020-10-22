@@ -5,8 +5,15 @@ namespace common\components;
 use app\models\Apple;
 use yii\helpers\Url;
 
+/**
+ * Class Apples
+ * @package common\components
+ */
 class Apples
 {
+    /**
+     * @return array
+     */
     public function generate()
     {
         Apple::deleteAll([]);
@@ -40,6 +47,10 @@ class Apples
         return ['is_error' => $is_error, 'message' => implode('; ', $messages)];
     }
     
+    /**
+     * @param null $model
+     * @return string
+     */
     public static function getPathImage($model = null)
     {
         if($model == null) return '';

@@ -75,19 +75,4 @@ class Apple extends ActiveRecord
             'updated_at' => 'Updated At',
         ];
     }
-    
-    public function fall()
-    {
-    
-    }
-    
-    public function eat($percent)
-    {
-    
-    }
-    
-    public function remove()
-    {
-
-    }
 }

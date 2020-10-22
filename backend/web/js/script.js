@@ -13,7 +13,6 @@ function get_apples()
         },
         'success': function(data) {
             var result = JSON.parse(data);
-            //console.log(result.error);
             if(result.is_error) {
                 alert(result.message);
             }
@@ -107,7 +106,6 @@ function apple_fall(id)
                 alert('Ошибка выполнения запроса к серверу!');
             },
             'success': function(data) {
-                console.log(data);
                 var result = JSON.parse(data);
                 if(result.is_error) {
                     alert('При обновлении статуса яблока возникла ошибка!');
@@ -188,7 +186,6 @@ function apple_eat_percent()
             alert('Ошибка выполнения запроса к серверу!');
         },
         'success': function(data) {
-//            console.log(data);
             var result = JSON.parse(data);
 
             if(result.is_error) {
